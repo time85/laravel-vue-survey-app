@@ -9,13 +9,13 @@
     </template>
 
 
-    <pre>{{model}}</pre>
+    <!--<pre>{{model}}</pre>-->
 
     <form @submit.prevent="saveSurvey">
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         <!-- Survey Fields -->
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-
+          <h3 class="text-2xl font-semibold">Survey</h3>
 
           <div>
             <label class="block text-sm font-medium text-gray-700">
@@ -115,6 +115,52 @@
         </div>
         <!--/ Survey Fields -->
 
+
+        <!-- Questions -->
+        <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+          <h3 class="text-2xl font-semibold flex items-center justify-between">
+            Questions
+
+            <button
+              type="button"
+              @click="addQuestion()"
+              class="flex items-center text-sm py-1 px-4 rounded-sm text-white bg-gray-600 hover:bg-gray-700"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Add Question
+            </button>
+          </h3>
+
+          <div v-if="!model.questions.length" class="text-center text-gray-600">
+            You don't have any questions created
+          </div>
+
+          <div v-for="(question, index) in model.questions" :key="question.id">
+            <QuestionEditor
+                :question="question"
+                :index="index"
+                @change="changeQuestion"
+                @add="addQuestion"
+                @delete="deleteQuestion"
+              />
+          </div>
+
+        </div>
+
+
+        <!--/ Questions -->
+
         <div class="px-4 py-3 bg-gray-200 text-right sm:px-6">
           <button
             type="submit"
@@ -136,6 +182,7 @@
 <script setup>
 import store from '../../store';
 import PageComponent from "../../components/PageComponent.vue";
+import QuestionEditor from "../../components/editor/QuestionEditor.vue";
 import {ref} from "vue";
 import {useRoute} from 'vue-router';
 
