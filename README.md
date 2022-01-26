@@ -6,15 +6,13 @@ Build with this amazing video -> [YouTube Video](https://youtu.be/WLQDpY7lOLg)
 ## Requirements
 You need to have PHP version **8.0** or above. Node.js version **12.0** or above.
 
-## Demo
-https://yoursurveys.xyz
 
 
 ## Installation
 
 #### Backend
 1. Clone the project
-2. Go to the project root directory
+2.  Navigate to `backend` folder using terminal
 3. Run `composer install`
 4. Create database
 5. Copy `.env.example` into `.env` file and adjust parameters
