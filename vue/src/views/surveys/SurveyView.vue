@@ -185,8 +185,9 @@ import store from '../../store';
 import PageComponent from "../../components/PageComponent.vue";
 import QuestionEditor from "../../components/editor/QuestionEditor.vue";
 import {ref} from "vue";
-import {useRoute} from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 
+const router = useRouter();
 const route = useRoute();
 
 let model = ref({
@@ -225,6 +226,16 @@ function changeQuestion(question) {
     }
     return q;
   });
+}
+
+function saveSurvey() {
+  store.dispatch("saveSurvey", model.value)
+  .then(({data}) => {
+    router.push({
+      name: "SurveyView",
+      params: { id: data.data.id}
+    });
+  })
 }
 
 </script>
