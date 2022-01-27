@@ -21,6 +21,9 @@ Route::middleware('auth:sanctum')->group(function() {
     });
     //TODO: why does this need to be inside?!?!
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::resource('/survey', \App\Http\Controllers\SurveyController::class);
+
 });
 
 
