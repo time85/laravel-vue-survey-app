@@ -65,7 +65,18 @@ class SurveyController extends Controller
      */
     public function update(UpdateSurveyRequest $request, Survey $survey)
     {
-        $survey->update($request->validated());
+        $data = $request->validated();
+        if (isset($data['image'])) {
+            $relativePath = $this->saveImage($data['image']);
+            $data['image'] = $relativePath;
+
+            // if there is an old image
+            if ($survey->image) {
+                File::delete(public_path($survey->image));
+            }
+        }
+
+        $survey->update($data);
         return new SurveyResource($survey);
     }
 
