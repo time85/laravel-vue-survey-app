@@ -340,9 +340,15 @@ function dataChange() {
   }
 
   emit("change", data);
-
 }
 
+function addQuestion() {
+  emit("add", props.index + 1);
+}
+
+function deleteQuestion() {
+  emit("delete", props.question);
+}
 
 </script>
 
