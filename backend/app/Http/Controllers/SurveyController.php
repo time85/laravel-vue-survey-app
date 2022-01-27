@@ -6,6 +6,8 @@ use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
 use App\Http\Resources\SurveyResource;
 use App\Models\Survey;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class SurveyController extends Controller
 {
@@ -28,8 +30,15 @@ class SurveyController extends Controller
      */
     public function store(StoreSurveyRequest $request)
     {
-        $result = Survey::query()->create($request->validated());
-        return new SurveyResource($result);
+        $data = $request->validated();
+
+        if (isset($data['image'])) {
+            $relativePath = $this->saveImage($data['image']);
+            $data['image'] = $relativePath;
+        }
+
+        $survey = Survey::query()->create($data);
+        return new SurveyResource($survey);
     }
 
     /**
@@ -75,4 +84,39 @@ class SurveyController extends Controller
         $survey->delete();
         return response('', 204);
     }
+
+    private function saveImage($image) {
+
+        if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
+            $image = substr($image, strpos($image, ',') + 1);
+            $type = strtolower($type[1]);
+
+            if (!in_array($type, ['jpg',  'jpeg', 'gif', 'png'])) {
+                throw new Exception('unsupported extension.');
+            }
+
+            $image = str_replace(' ', '+', $image);
+            $image = base64_decode($image);
+
+            if (!$image) {
+                throw new Exception('base64-decode failed');
+            }
+        }
+        else {
+            throw new Exception('did not match data URI with imaage data.');
+        }
+
+        $dir = 'images/';
+        $file = Str::random() . '.' . $type;
+
+        $absolutePath = public_path($dir);
+        $relativePath = $dir. $file;
+        if (!File::exists($absolutePath)) {
+            File::makeDirectory($absolutePath, 0755, true);
+        }
+        File::put($relativePath, $image);
+
+        return $relativePath;
+    }
+
 }
