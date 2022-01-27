@@ -142,7 +142,7 @@
             </button>
           </h3>
 
-          <div v-if="!model.questions.length" class="text-center text-gray-600">
+          <div v-if="!model.questions?.length" class="text-center text-gray-600">
             You don't have any questions created
           </div>
 
@@ -184,7 +184,7 @@ import { v4 as uuidv4 } from "uuid";
 import store from '../../store';
 import PageComponent from "../../components/PageComponent.vue";
 import QuestionEditor from "../../components/editor/QuestionEditor.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {useRoute, useRouter} from 'vue-router';
 
 const router = useRouter();
@@ -194,13 +194,24 @@ let model = ref({
   title: '',
   status: false,
   description: null,
-  image: null,
+  image_url: null,
   expire_date: null,
   questions: []
 });
 
+// What if currentSurvey changes -> update the model ..
+watch(
+  () => store.state.currentSurvey.data,
+  (newVal, oldVal) => {
+    model.value = {
+      ...JSON.parse(JSON.stringify(newVal)),
+      status: newVal.status !== 'draft'
+    };
+  }
+)
+
 if (route.params.id) {
-  model.value = store.state.surveys.find((survey) => survey.id === parseInt(route.params.id));
+  store.dispatch('getSurvey', route.params.id);
 }
 
 
@@ -217,9 +228,6 @@ function onImageChoose(ev) {
   }
   reader.readAsDataURL(file);
 }
-
-
-
 
 function addQuestion(index) {
   const newQuestion = {
