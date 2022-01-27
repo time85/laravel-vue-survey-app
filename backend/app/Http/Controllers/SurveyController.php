@@ -90,10 +90,16 @@ class SurveyController extends Controller
     public function destroy(Survey $survey, Request $request)
     {
         $user = $request->user();
-        if ($user->id !== $request->user_id) {
+        if ($user->id !== $survey->user_id) {
             return abort(403, 'Unauthorized action.');
         }
+
         $survey->delete();
+        // if there is an old image
+        if ($survey->image) {
+            File::delete(public_path($survey->image));
+        }
+
         return response('', 204);
     }
 

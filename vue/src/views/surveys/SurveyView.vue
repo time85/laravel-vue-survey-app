@@ -3,15 +3,33 @@
     <template v-slot:header>
       <div class="flex justify-between items-center">
         <h1 class="text-3xl font-bold text-gray-900">
-          {{model.id ? model.title : 'Create a new Survey'}}
+          {{ route.params.id ? model.title : 'Create a new Survey'}}
         </h1>
+
+        <button
+          v-if="route.params.id"
+          type="button"
+          class="py-2 px-3 text-white bg-red-500 rounded-md hover-bg-red-600"
+          @click="deleteSurvey()"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+          Delete Survey
+        </button>
       </div>
     </template>
 
 
     <!--<pre>{{model}}</pre>-->
 
-    <form @submit.prevent="saveSurvey">
+    <div
+      v-if="surveyLoading"
+      class="flex justify-center"
+    >
+      Loading...
+    </div>
+    <form v-else @submit.prevent="saveSurvey">
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         <!-- Survey Fields -->
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
@@ -184,7 +202,7 @@ import { v4 as uuidv4 } from "uuid";
 import store from '../../store';
 import PageComponent from "../../components/PageComponent.vue";
 import QuestionEditor from "../../components/editor/QuestionEditor.vue";
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {useRoute, useRouter} from 'vue-router';
 
 const router = useRouter();
@@ -198,6 +216,8 @@ let model = ref({
   expire_date: null,
   questions: []
 });
+
+const surveyLoading = computed(() => store.state.currentSurvey.loading);
 
 // What if currentSurvey changes -> update the model ..
 watch(
@@ -264,6 +284,17 @@ function saveSurvey() {
   })
 }
 
+function deleteSurvey() {
+  if (confirm('Do you really want to delete the current Survey?')) {
+    store
+      .dispatch("deleteSurvey", model.value.id)
+      .then(() => {
+        router.push({
+          name: "Surveys",
+        });
+      });
+  }
+}
 
 
 </script>
