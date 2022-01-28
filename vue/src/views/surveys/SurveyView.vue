@@ -254,7 +254,7 @@ function addQuestion(index) {
     id: uuidv4(),
     type: "text",
     question: "",
-    descirption: null,
+    description: null,
     data: {}
   };
 
