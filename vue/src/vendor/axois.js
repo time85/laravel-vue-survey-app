@@ -1,8 +1,10 @@
 import axios from "axios";
 import store from "../store";
 
+import.meta.env.BASE_URL
+
 const axiosClient = axios.create({
-  baseURL: 'http://localhost/backend/api'
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`
 })
 
 axiosClient.interceptors.request.use(config => {
