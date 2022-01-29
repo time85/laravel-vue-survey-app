@@ -5,9 +5,9 @@ import Register from "../views/Register.vue";
 import DefaultLayout from "../components/DefaultLayout.vue";
 import Surveys from "../views/surveys/Surveys.vue";
 import SurveyView from "../views/surveys/SurveyView.vue";
+import SurveyPublicView from "../views/public/surveys/SurveyPublicView.vue";
+
 import AuthLayout from "../components/AuthLayout.vue";
-
-
 import store from "../store";
 
 const routes = [
@@ -25,6 +25,8 @@ const routes = [
       {path: '/surveys/:id', name: 'SurveyView', component: SurveyView}
     ]
   },
+
+  // ------------- PUBLIC -----------------------------------
   {
     path: '/auth',
     redirect: '/login',
@@ -37,7 +39,16 @@ const routes = [
       {path: '/login', name: 'Login', component: Login},
       {path: '/register', name: 'Register', component: Register}
     ]
+  },
+
+  // SURVEY VIEW
+  {
+    path: '/view/survey/:slug',
+    name: 'SurveyPublicView',
+    component: SurveyPublicView
   }
+
+  // ------------- PUBLIC END -----------------------------------
 ];
 
 const router = createRouter({

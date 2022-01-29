@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SurveyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,10 +23,15 @@ Route::middleware('auth:sanctum')->group(function() {
     //TODO: why does this need to be inside?!?!
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::resource('/survey', \App\Http\Controllers\SurveyController::class);
+    Route::resource('/survey', SurveyController::class);
 
 });
 
+// Public Routes
+Route::get('/survey-by-slug/{survey:slug}', [SurveyController::class, 'showForPublic']);
+Route::post('/survey/{survey}/answer', [SurveyController::class, 'storeAnswer']);
 
+// Admin-Login
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
