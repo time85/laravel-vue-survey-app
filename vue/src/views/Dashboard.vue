@@ -38,14 +38,26 @@
              />
         <h3 class="tefont-bold text-xl mb-3">{{data.latestSurvey.title}}</h3>
         <div class="flex justify-between text-sm mb-1">
-          <div>Upload Date:</div>
+          <div>Create Date:</div>
           <div>{{data.latestSurvey.created_at}}</div>
         </div>
         <div class="flex justify-between text-sm mb-1">
-          <div>Answers:</div>
-          <div>{{data.totalAnswers}}</div>
+          <div>Expiration Date:</div>
+          <div>{{data.latestSurvey.expire_date}}</div>
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between text-sm mb-1">
+          <div>Status:</div>
+          <div>{{data.latestSurvey.status ? 'Active' : 'Draft'}}</div>
+        </div>
+        <div class="flex justify-between text-sm mb-1">
+          <div>Questions:</div>
+          <div>{{data.latestSurvey.questions}}</div>
+        </div>
+        <div class="flex justify-between text-sm mb-1">
+          <div>Answers:</div>
+          <div>{{data.latestSurvey.answers}}</div>
+        </div>
+        <div class="mt-4 flex justify-between">
           <router-link  :to="{name: 'SurveyView', params: {id: data.latestSurvey.id}}"
                         class="flex py-2 px-4 border border-transparent
                 text-sm rounded-md text-white bg-indigo-600 hover:bg-indigo-700
